@@ -1,0 +1,27 @@
+# Never commit patient data, scans, personal photos, credentials, or local test outputs.
+*.keystore
+*.jks
+*.p12
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+**/local.properties
+**/.gradle/
+**/build/
+**/.idea/
+**/.kotlin/
+.DS_Store
+# Sensitive/locally generated data
+data/private/
+data/patient/
+patient-data/
+medical-records/
+lab-reports/
+**/secrets/
+**/*-private.pdf
+**/*-patient.pdf
+**/*-lab-result.pdf
+*.apk
+*.aab
