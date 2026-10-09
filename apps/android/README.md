@@ -10,7 +10,7 @@ GitHub Actions [android-h1.yml](../../.github/workflows/android-h1.yml) exécute
 - tests unitaires des valeurs, formats et dates locales ;
 - compilation `:app:assembleDebug` puis APK en artifact temporaire avec SHA-256.
 
-Au 2026-10-09 : le build CI est **à vérifier** ; ne pas revendiquer un APK ni un test runtime sans run `SUCCESS`.
+Au 2026-10-09 : build CI **SUCCESS**, [run #37970764222](https://github.com/zdmooc/maya-health-nutrition-intelligence/actions/runs/37970764222), build + tests JVM + artifact debug APK et SHA-256 publiés. Test sur téléphone réel/émulateur **non effectué**.
 
 ## Installation sur Android
 1. Ouvrir GitHub Actions > **Android H1 — build and unit tests** > dernier run réussi.

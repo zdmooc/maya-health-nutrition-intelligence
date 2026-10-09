@@ -2,7 +2,7 @@
 
 Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans biologiques et de veille scientifique, basée sur des **preuves traçables**.
 
-> **État au 2026-10-09 : H0 INITIALIZED / ARCHITECTURE_BASELINE — aucune application APK ni fonctionnalité de reconnaissance photo/code-barres/biologie testée.**
+> **État au 2026-10-09 : H1_CI_BUILD_PROVEN / H1_DEVICE_RUNTIME_PENDING.** Un APK debug a été compilé avec tests unitaires CI SUCCESS. L'installation sur téléphone réel, l'export/import chiffré et les fonctions H2–H7 ne sont pas validés.
 
 ## Objectifs fonctionnels
 1. Journal alimentaire local et cumul quotidien, unités contrôlées.
@@ -31,7 +31,7 @@ Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans b
 | Gate | Fonctionnalité | Statut |
 |---|---|---|
 | H0 | Cadrage, ADR, contrats de données, squelette Android | IN PROGRESS |
-| H1 | Journal manuel quotidien Android, stockage local sécurisé et tests | OPEN |
+| H1 | Journal manuel chiffré Android, tests et APK debug | CI_BUILD_PROVEN / DEVICE_PENDING / EXPORT_PENDING |
 | H2 | Recherche/scan code-barres, traçabilité produit | OPEN |
 | H3 | Photos repas et vérification des portions, benchmark d'erreur | OPEN |
 | H4 | Micronutriments et composition, références et couverture | OPEN |
@@ -42,7 +42,7 @@ Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans b
 Consulter [ROADMAP](docs/ROADMAP.md), [ADR-0001](docs/adr/ADR-0001-android-local-first.md), [modèle de données](docs/architecture/DATA_CONTRACTS.md), [sources](docs/scientific-methodology/SOURCES.md) et [sécurité](docs/privacy-security/THREAT_MODEL.md).
 
 ## Démarrage
-Le module Android `apps/android/` est un **prototype compilable à qualifier** : journal manuel d'aliments en mémoire, sans sauvegarde persistante. Ouvrir le dossier dans Android Studio disposant de JDK 17, SDK Android 37 et Gradle compatible. Aucun APK n'a encore été produit ou testé sur un téléphone réel.
+Le module Android `apps/android/` offre un journal manuel avec stockage local AES-256-GCM/AndroidKeyStore, journal des aliments et suppression individuelle. Le build GitHub Actions du 09/10/2026 est **SUCCESS**, artefact APK debug généré. Aucun test d'exécution sur téléphone réel ni test instrumentation AndroidKeystore n'est encore attesté.
 
 ## Limites
-Ce dépôt peut être **public**. Il ne doit contenir que des jeux de données fictifs ou explicitement publics/licenciés. Pour toute expérimentation sur les bilans de l'utilisateur : privilégier un stockage privé chiffré en dehors de Git et une application installée localement.
+Ce dépôt est **public**. Il ne doit contenir que des jeux de données fictifs ou explicitement publics/licenciés. Pour toute expérimentation sur les bilans de l'utilisateur : privilégier un stockage privé chiffré en dehors de Git et une application installée localement.
