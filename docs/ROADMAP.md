@@ -5,8 +5,8 @@
 | Gate | Scope | Critère d'acceptation | Statut |
 |---|---|---|---|
 | H0 | Contrats, ADR, privacy, Android minimal | Sources, frontières, Android sources disponibles | DOCUMENTED |
-| H1 | Journal Android personnel | Ajout/suppression, stockage AES-GCM, journée/fuseau, tests JVM et APK CI prouvés ; export/import/purge codés, validation sur émulateur et téléphone restant | EMULATOR_RUNTIME_PROVEN / PHONE_PENDING |
-| H2 | Codes-barres | Scan Google Play Services + saisie manuelle, vérification GTIN, OFF API v3, gestion données absentes ; preuve build/Android en attente | CI_AND_PARSER_EMULATOR_PROVEN / DEVICE_SCAN_PENDING |
+| H1 | Journal Android personnel | Ajout/suppression, stockage AES-GCM, sauvegarde et purge codées ; tests JVM et 6 tests d'intégration Android sur émulateur PASS ; flux UI SAF et téléphone encore à vérifier | EMULATOR_RUNTIME_PROVEN / PHONE_PENDING |
+| H2 | Codes-barres | Scan Google Play Services codé et compilé, vérification GTIN et parser OFF testés sur émulateur ; caméra réelle, requête réseau et provenance persistante à valider | CI_AND_PARSER_EMULATOR_PROVEN / DEVICE_SCAN_PENDING |
 | H3 | Photos repas | Identification multi-aliments, grammages ajustés humainement, test d'erreur vs pesée | OPEN |
 | H4 | Nutrition complète | Ciqual/USDA, unités macro/micronutriments, couverture par aliment, incertitudes, licence | OPEN |
 | H5 | Biologie | PDF+photo, unité, intervalle de référence, validation humaine, courbes longitudinales | OPEN |
@@ -22,7 +22,7 @@
 - [ ] Les fonctions déployées uniquement quand vérifiées ; pas de promesse de diagnostic ni thérapeutique.
 
 ## Exécution prioritaire
-1. H1 : finir les tests d'intégration sur émulateur puis sur Android réel (Keystore, export/import chiffré, restauration après redémarrage, fichier altéré, purge, signature stable).
+1. H1 : terminer les essais sur Android réel (Keystore, export/import chiffré, restauration après redémarrage, fichier altéré, purge, signature stable).
 2. H2 : barcode + OFF, gestion des données manquantes et cache.
 3. H4 : moteur de composition reproductible avant toute recommandation personnalisée.
 4. H3 : computer vision avec estimation vs pesée et consentement d'upload.
