@@ -4,6 +4,10 @@ Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans b
 
 > **État au 2026-10-10 : H1_EMULATOR_RUNTIME_PROVEN / PHONE_PENDING ; H2_CI_AND_PARSER_EMULATOR_PROVEN / SCANNER_PHONE_PENDING.** Ajout de l'export/import chiffré et de la purge ; preuves de fonctionnement sur appareil à valider avant clôture.
 
+## Reprise de session — 10 octobre 2026
+
+Travail suspendu à la demande de l'utilisateur. Reprendre par [le checkpoint H1/H2 et la liste des actions restantes](docs/SESSION_HANDOFF_2026-10-10.md). **Tests CI et émulateur verts ; test Android physique non effectué ; H4 micronutriments sera le prochain axe métier.**
+
 ## Objectifs fonctionnels
 1. Journal alimentaire local et cumul quotidien, unités contrôlées.
 2. Scan de code-barres produit (Open Food Facts) et enrichissement nutritionnel (CIQUAL, USDA si droits et données disponibles).
