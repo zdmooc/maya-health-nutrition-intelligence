@@ -46,51 +46,11 @@ class EncryptedDiaryRepository(context: Context) {
             cipher.init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(128, iv))
             cipher.doFinal(cipherBytes)
         }
-        val root = JSONObject(String(payload, StandardCharsets.UTF_8))
-        if (root.getInt("schemaVersion") != 1) throw IOException("Unsupported data schema")
-        val arr = root.getJSONArray("entries")
-        if (arr.length() > 10000) throw IOException("Diary limit exceeded")
-        val entries = mutableListOf<FoodEntry>()
-        for (i in 0 until arr.length()) {
-            val item = arr.getJSONObject(i)
-            val grams = if (item.isNull("portionGrams")) null else item.getDouble("portionGrams")
-            val entry = FoodEntry(
-                id = item.getString("id"),
-                foodName = item.getString("foodName"),
-                energyKcal = item.getDouble("energyKcal"),
-                portionGrams = grams,
-                loggedAtEpochMs = item.getLong("loggedAtEpochMs"),
-                source = item.getString("source")
-            )
-            if (entry.id.isBlank() || !FoodMath.isValid(
-                entry.foodName, entry.energyKcal, entry.portionGrams,
-                entry.portionGrams?.toString() ?: ""
-            ) || entry.source != "USER_ENTERED") throw IOException("Invalid diary entry")
-            entries.add(entry)
-        }
-        return entries
+        return DiaryJsonCodec.decode(payload)
     }
 
     fun save(entries: List<FoodEntry>) {
-        if (entries.size > 10000) throw IOException("Diary limit exceeded")
-        val arr = JSONArray()
-        entries.forEach { entry ->
-            require(entry.id.isNotBlank() && FoodMath.isValid(
-                entry.foodName, entry.energyKcal, entry.portionGrams,
-                entry.portionGrams?.toString() ?: ""
-            )) { "Invalid diary entry" }
-            arr.put(JSONObject().apply {
-                put("id", entry.id)
-                put("foodName", entry.foodName)
-                put("energyKcal", entry.energyKcal)
-                put("portionGrams", entry.portionGrams ?: JSONObject.NULL)
-                put("loggedAtEpochMs", entry.loggedAtEpochMs)
-                put("source", "USER_ENTERED")
-            })
-        }
-        val clear = JSONObject().put("schemaVersion", 1).put("entries", arr)
-            .toString().toByteArray(StandardCharsets.UTF_8)
-        if (clear.size > MAX_FILE_SIZE - 64) throw IOException("Diary too large")
+        val clear = DiaryJsonCodec.encode(entries)
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, key())
         val ciphertext = cipher.doFinal(clear)
@@ -110,6 +70,16 @@ class EncryptedDiaryRepository(context: Context) {
             if (stream != null) atomic.failWrite(stream)
             throw failure
         }
+    }
+
+    /**
+     * Purge local journal and Keystore key. Backups exported by SAF are external:
+     * the user must separately delete copies from their chosen storage.
+     */
+    fun deleteAll() {
+        atomic.delete()
+        val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        if (keyStore.containsAlias(KEY_ALIAS)) keyStore.deleteEntry(KEY_ALIAS)
     }
 
     private fun key(): SecretKey {
