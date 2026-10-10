@@ -58,7 +58,7 @@ Consulter [ROADMAP](docs/ROADMAP.md), [ADR-0001](docs/adr/ADR-0001-android-local
 - Compilation H2 et six tests Android sur émulateur SUCCESS ; lecture réelle par caméra, requête réseau OFF en conditions réelles et provenance persistée à qualifier.
 
 ## Démarrage
-Le module Android `apps/android/` offre un journal manuel avec stockage local AES-256-GCM/AndroidKeyStore, journal des aliments et suppression individuelle. Le build GitHub Actions du 09/10/2026 est **SUCCESS**, artefact APK debug généré. Aucun test d'exécution sur téléphone réel ni test instrumentation AndroidKeystore n'est encore attesté.
+Le module Android `apps/android/` offre un journal manuel avec stockage local AES-256-GCM/AndroidKeyStore, journal des aliments et suppression individuelle. Le build GitHub Actions du 09/10/2026 est **SUCCESS**, artefact APK debug généré. Les tests d'instrumentation Android Keystore sur émulateur sont SUCCESS (6/6 avec H2). Aucun test sur le téléphone réel de l'utilisateur ni parcours complet SAF UI n'est encore attesté.
 
 ## Limites
 Ce dépôt est **public**. Il ne doit contenir que des jeux de données fictifs ou explicitement publics/licenciés. Pour toute expérimentation sur les bilans de l'utilisateur : privilégier un stockage privé chiffré en dehors de Git et une application installée localement.
