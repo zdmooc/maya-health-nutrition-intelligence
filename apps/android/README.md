@@ -2,7 +2,7 @@
 
 La branche `main` contient les sources de l'application Android native Kotlin/Jetpack Compose. Fonction prévue : journal de repas manuel (nom, calories, grammes optionnels), sommes quotidiennes, historique et suppression, avec stockage **AES-256/GCM chiffré** par Android Keystore.
 
-**Aucune donnée personnelle dans Git.** La version debug n'intègre ni caméra, ni Internet, ni cloud, ni PDF, ni IA. Les calories doivent être saisies manuellement. Les micronutriments absents restent inconnus.
+**Aucune donnée personnelle dans Git.** H1 tient le journal chiffré localement. H2 utilise Google Code Scanner (sans permission caméra de notre APK) et la permission INTERNET pour une requête explicite Open Food Facts. Aucun bilan, image du repas ou journal n'est envoyé. Les micronutriments absents restent inconnus.
 
 ## Build CI
 GitHub Actions [android-h1.yml](../../.github/workflows/android-h1.yml) exécute :
@@ -33,3 +33,11 @@ Option locale : Gradle 9.5 installé, Android SDK 37, build-tools 36, JDK 17 ; d
 - `H1_DATA_PORTABILITY_READY` : export/import chiffré et purge codés ; validation d'exécution à confirmer.
 
 La présence d'une interface et du chiffrement ne démontre pas une conformité réglementaire ou un dispositif médical.
+
+## H2 — Scanner et Open Food Facts (développement en cours)
+- Scanner Google Play Services 16.1.0 sur téléphone compatible, ou saisir un EAN/UPC manuellement.
+- Contrôle du chiffre GTIN, consultation HTTPS Open Food Facts v3 uniquement sur bouton utilisateur.
+- Les valeurs nutritionnelles sont issues d'une base collaborative et doivent être vérifiées ; si l'énergie est inconnue, pas de conversion automatique à zéro.
+- Confirmer les grammes et cliquer sur Préremplir, puis vérifier la saisie dans le journal.
+- H2 ne stocke pas encore dans l'entrée persistée le code-barres, la provenance ni les micronutriments ; ces extensions restent planifiées.
+- Validation scanner réel et réseau indisponible sur téléphone : encore requise.

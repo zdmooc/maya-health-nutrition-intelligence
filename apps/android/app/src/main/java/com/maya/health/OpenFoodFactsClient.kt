@@ -28,8 +28,14 @@ object OpenFoodFactsClient {
     private const val MAX_RESPONSE = 1_000_000
     private const val USER_AGENT = "MayaHealthNutrition/0.3 (https://github.com/zdmooc/maya-health-nutrition-intelligence)"
 
-    fun isValidBarcode(code: String): Boolean =
-        code.matches(Regex("(\\d{8}|\\d{12}|\\d{13}|\\d{14})"))
+    fun isValidBarcode(code: String): Boolean {
+        if (!code.matches(Regex("(\\d{8}|\\d{12}|\\d{13}|\\d{14})"))) return false
+        val digits = code.map { it - '0' }
+        val weighted = digits.dropLast(1).asReversed()
+            .mapIndexed { i, n -> n * if (i % 2 == 0) 3 else 1 }
+            .sum()
+        return (10 - weighted % 10) % 10 == digits.last()
+    }
 
     fun fetchByCode(code: String): ProductSnapshot? {
         require(isValidBarcode(code)) { "EAN/UPC invalid" }

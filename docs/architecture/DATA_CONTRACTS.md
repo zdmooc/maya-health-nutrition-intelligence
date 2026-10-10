@@ -46,3 +46,6 @@
 
 ## Agrégats et couverture
 Somme journalière : uniquement pour éléments mesurés/estimés disponibles. Afficher à côté `coverage_ratio` (fraction des aliments avec ce nutriment renseigné) et `is_partial=true` si manque de données. Un total partiel est **au minimum des apports connus**, pas une mesure complète.
+
+## H2 — Produit scanné, état de conception
+La consultation Open Food Facts v3 est séparée de la persistance du journal. `ProductSnapshot` porte `code`, `name`, `brand`, `energyKcal100g`, `proteinG100g`, `fatG100g`, `carbsG100g`, `capturedAt`, `source`. Toute valeur absente est `null` : pas de zéro fictif. Le nom et les calories pour une portion préremplissent la saisie manuelle uniquement après confirmation des grammes. Le schéma de la base H1 ne conserve pas encore la provenance OFF du produit ; **H2 n'est pas clos** sans cette évolution et des tests sur appareil Android.

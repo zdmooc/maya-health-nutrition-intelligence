@@ -2,7 +2,7 @@
 
 Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans biologiques et de veille scientifique, basée sur des **preuves traçables**.
 
-> **État au 2026-10-10 : H1_BACKUP_SOURCE_IMPLEMENTED / ANDROID_BUILD_PROVEN / EMULATOR_AND_PHONE_PENDING.** Ajout de l'export/import chiffré et de la purge ; preuves de fonctionnement sur appareil à valider avant clôture.
+> **État au 2026-10-10 : H1_EMULATOR_RUNTIME_PROVEN / PHONE_PENDING ; H2_SOURCE_IMPLEMENTED / BUILD_PENDING.** Ajout de l'export/import chiffré et de la purge ; preuves de fonctionnement sur appareil à valider avant clôture.
 
 ## Objectifs fonctionnels
 1. Journal alimentaire local et cumul quotidien, unités contrôlées.
@@ -31,8 +31,8 @@ Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans b
 | Gate | Fonctionnalité | Statut |
 |---|---|---|
 | H0 | Cadrage, ADR, contrats de données, squelette Android | DOCUMENTED |
-| H1 | Journal Android, sauvegarde portable chiffrée, restauration et purge | BUILD_PROVEN / EMULATOR_PENDING / PHONE_PENDING |
-| H2 | Recherche/scan code-barres, traçabilité produit | OPEN |
+| H1 | Journal Android, sauvegarde portable chiffrée, restauration et purge | EMULATOR_RUNTIME_PROVEN / PHONE_PENDING |
+| H2 | Lecture Google Code Scanner et consultation Open Food Facts v3 ; préremplissage manuel du journal | SOURCE_IMPLEMENTED / CI_AND_DEVICE_PENDING |
 | H3 | Photos repas et vérification des portions, benchmark d'erreur | OPEN |
 | H4 | Micronutriments et composition, références et couverture | OPEN |
 | H5 | Import biologique et suivi longitudinal, validation humaine | OPEN |
@@ -45,6 +45,13 @@ Consulter [ROADMAP](docs/ROADMAP.md), [ADR-0001](docs/adr/ADR-0001-android-local
 - Export local chiffré à phrase secrète ; import avec confirmation d'écrasement ; purge du journal et de la clé Keystore.
 - Tests Android d'intégration (Keystore, archive altérée, mauvais mot de passe, purge) ajoutés ; [workflow émulateur](.github/workflows/android-h1-runtime.yml).
 - Aucun APK de production ni test sur ton téléphone n'est revendiqué. Pour éviter une perte de données à la mise à jour, consulte [la stratégie de signature](docs/SECURE_SIGNING_AND_UPDATE.md).
+
+## Extension H2 — 10 octobre 2026
+- Scanner EAN/UPC par Google Play Services (sans permission caméra directe) ; saisie manuelle alternative.
+- Recherche explicite de produits Open Food Facts API v3 avec envoi du **code-barres uniquement**, contrôle du chiffre de vérification GTIN, provenance et date de consultation.
+- Calories et macros manquantes restent `UNKNOWN`, et la portion est confirmée avant enregistrement ; la liaison de provenance persistante reste à développer.
+- Ce mode utilise INTERNET lors de la recherche produit ; il n'envoie pas le journal alimentaire ni des bilans biologiques.
+- Compilation de l'ajout H2 et tests réels scanner/téléphone à qualifier, aucune revendication H2 opérationnel avant preuve.
 
 ## Démarrage
 Le module Android `apps/android/` offre un journal manuel avec stockage local AES-256-GCM/AndroidKeyStore, journal des aliments et suppression individuelle. Le build GitHub Actions du 09/10/2026 est **SUCCESS**, artefact APK debug généré. Aucun test d'exécution sur téléphone réel ni test instrumentation AndroidKeystore n'est encore attesté.

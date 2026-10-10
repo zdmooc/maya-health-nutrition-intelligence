@@ -89,6 +89,7 @@ class EncryptedDiaryRepositoryTest {
         assertTrue(found.fatG100g == null)
         assertTrue(found.carbsG100g == null)
         assertTrue(OpenFoodFactsClient.isValidBarcode("3017620422003"))
+        assertFalse(OpenFoodFactsClient.isValidBarcode("3017620422002"))
         assertFalse(OpenFoodFactsClient.isValidBarcode("barcode-private"))
     }
 
