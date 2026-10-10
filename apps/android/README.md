@@ -41,3 +41,9 @@ La présence d'une interface et du chiffrement ne démontre pas une conformité 
 - Confirmer les grammes et cliquer sur Préremplir, puis vérifier la saisie dans le journal.
 - H2 ne stocke pas encore dans l'entrée persistée le code-barres, la provenance ni les micronutriments ; ces extensions restent planifiées.
 - Validation scanner réel et réseau indisponible sur téléphone : encore requise.
+
+## Dernières preuves (10 octobre 2026)
+- [Build Android H1/H2 SUCCESS](https://github.com/zdmooc/maya-health-nutrition-intelligence/actions/runs/38042295457) sur commit `885508d6`, artefact APK debug (ID 11665863455).
+- [Instrumentation Android API 35 SUCCESS](https://github.com/zdmooc/maya-health-nutrition-intelligence/actions/runs/38042295500) : 6 tests, 0 échec.
+- Ces résultats **ne** testent **pas** le scanner de caméra ni le GET réel sur Open Food Facts ; essai sur téléphone et stratégie de signature restent requis.
+- [Evidence complète](../../evidence/H1_H2_ANDROID_VALIDATION_2026-10-10.md).

@@ -1,12 +1,12 @@
 # Roadmap produit — H0 à H7
 
-État au 2026-10-10 : **H1_EMULATOR_RUNTIME_PROVEN / PHONE_PENDING, H2_SOURCE_IMPLEMENTED / CI_PENDING**. APK debug construit et tests unitaires passés ; aucun scan réel ni analyse biologique implémentés.
+État au 2026-10-10 : **H1_EMULATOR_RUNTIME_PROVEN / PHONE_PENDING, H2_CI_AND_PARSER_EMULATOR_PROVEN / DEVICE_SCAN_PENDING**. APK debug construit et tests unitaires passés ; aucun scan réel ni analyse biologique implémentés.
 
 | Gate | Scope | Critère d'acceptation | Statut |
 |---|---|---|---|
 | H0 | Contrats, ADR, privacy, Android minimal | Sources, frontières, Android sources disponibles | DOCUMENTED |
 | H1 | Journal Android personnel | Ajout/suppression, stockage AES-GCM, journée/fuseau, tests JVM et APK CI prouvés ; export/import/purge codés, validation sur émulateur et téléphone restant | EMULATOR_RUNTIME_PROVEN / PHONE_PENDING |
-| H2 | Codes-barres | Scan Google Play Services + saisie manuelle, vérification GTIN, OFF API v3, gestion données absentes ; preuve build/Android en attente | SOURCE_IMPLEMENTED / CI_PENDING / PHONE_PENDING |
+| H2 | Codes-barres | Scan Google Play Services + saisie manuelle, vérification GTIN, OFF API v3, gestion données absentes ; preuve build/Android en attente | CI_AND_PARSER_EMULATOR_PROVEN / DEVICE_SCAN_PENDING |
 | H3 | Photos repas | Identification multi-aliments, grammages ajustés humainement, test d'erreur vs pesée | OPEN |
 | H4 | Nutrition complète | Ciqual/USDA, unités macro/micronutriments, couverture par aliment, incertitudes, licence | OPEN |
 | H5 | Biologie | PDF+photo, unité, intervalle de référence, validation humaine, courbes longitudinales | OPEN |

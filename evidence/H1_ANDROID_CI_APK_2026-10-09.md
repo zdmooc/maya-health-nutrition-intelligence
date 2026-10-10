@@ -1,5 +1,7 @@
 # H1 — Android source, tests JVM & APK CI evidence (2026-10-09)
 
+> Snapshot historique du 9 octobre. Il est remplacé pour l'état actuel par [H1/H2 Android validation du 10 octobre](H1_H2_ANDROID_VALIDATION_2026-10-10.md) : 6 tests instrumentation Android SUCCESS. Les états `NO` ci-dessous décrivent uniquement le snapshot historique du 9 octobre.
+
 ## Factuel
 - Repo: `zdmooc/maya-health-nutrition-intelligence`, branche `main`.
 - Fonction H1 : saisie du nom, calories manuelles, grammes facultatifs, total par date locale, historique, suppression d'une entrée.
