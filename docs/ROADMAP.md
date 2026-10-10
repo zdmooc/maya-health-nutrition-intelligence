@@ -1,11 +1,11 @@
 # Roadmap produit — H0 à H7
 
-État au 2026-10-09 : **H1_CI_BUILD_PROVEN / DEVICE_RUNTIME_PENDING**. APK debug construit et tests unitaires passés ; aucun scan réel ni analyse biologique implémentés.
+État au 2026-10-10 : **H1_BACKUP_SOURCE_IMPLEMENTED / CI_BUILD_PROVEN / EMULATOR_AND_PHONE_PENDING**. APK debug construit et tests unitaires passés ; aucun scan réel ni analyse biologique implémentés.
 
 | Gate | Scope | Critère d'acceptation | Statut |
 |---|---|---|---|
 | H0 | Contrats, ADR, privacy, Android minimal | Sources, frontières, Android sources disponibles | DOCUMENTED |
-| H1 | Journal Android personnel | Ajout/suppression, stockage AES-GCM, journée/fuseau, tests JVM et APK CI prouvés ; test téléphone et export sécurisé restants | CI_BUILD_PROVEN / DEVICE_PENDING |
+| H1 | Journal Android personnel | Ajout/suppression, stockage AES-GCM, journée/fuseau, tests JVM et APK CI prouvés ; export/import/purge codés, validation sur émulateur et téléphone restant | CI_BUILD_PROVEN / EMULATOR_PENDING / PHONE_PENDING |
 | H2 | Codes-barres | Scan en direct, EAN vérifié, OFF API v3, gestion produit absent et provenance | OPEN |
 | H3 | Photos repas | Identification multi-aliments, grammages ajustés humainement, test d'erreur vs pesée | OPEN |
 | H4 | Nutrition complète | Ciqual/USDA, unités macro/micronutriments, couverture par aliment, incertitudes, licence | OPEN |
@@ -22,7 +22,7 @@
 - [ ] Les fonctions déployées uniquement quand vérifiées ; pas de promesse de diagnostic ni thérapeutique.
 
 ## Exécution prioritaire
-1. H1 : terminer la validation sur appareil Android (persistance, suppression, AndroidKeyStore, absence de fuite réseau), puis export/suppression contrôlés.
+1. H1 : finir les tests d'intégration sur émulateur puis sur Android réel (Keystore, export/import chiffré, restauration après redémarrage, fichier altéré, purge, signature stable).
 2. H2 : barcode + OFF, gestion des données manquantes et cache.
 3. H4 : moteur de composition reproductible avant toute recommandation personnalisée.
 4. H3 : computer vision avec estimation vs pesée et consentement d'upload.

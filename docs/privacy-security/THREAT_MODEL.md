@@ -21,3 +21,6 @@ Les habitudes alimentaires, photos de repas et bilans biologiques peuvent révé
 3. Pas de traitement automatique prescriptif, ni conseil d'arrêt/changement de traitement.
 4. Si l'usage se généralise ou devient commercial, analyser RGPD, AIPD/DPIA, contrats de sous-traitance, obligations de dispositif médical selon les finalités effectives et éventuel hébergement HDS.
 5. Le prototype actuel ne persiste aucune donnée. **Ne pas saisir de données de santé réelles** tant que H1 sécurité n'est pas fermé.
+
+## H1 — Sauvegarde portable (10/10)
+Le journal est exporté sous forme de fichier chiffré, après choix de destination par l'utilisateur via Android Storage Access Framework. Secret dérivé PBKDF2-HMAC-SHA256 (210 000 itérations), sel aléatoire et AES-256-GCM. L'application ne détient pas de clé de récupération : mot de passe oublié = backup perdu. Export cloud choisi manuellement hors contrôle de l'application. Les fichiers externes exportés ne sont PAS supprimés par la purge locale. Revue du format, des comportements en cas d'interruption, des IME/claviers, des captures d'écran, des erreurs de stockage et des modèles Android requise avant usage de données réelles.

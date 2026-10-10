@@ -15,4 +15,10 @@
 | T11 | Demande suppression données | suppression vérifiable (base, cache, exports contrôlés) |
 | T12 | Réinstallation / appareil volé | pas de secrets persistants ni exports non chiffrés par défaut |
 
-À H0 : cas **spécifiés**, non exécutés. Tester via JVM + instrumentation sur appareil avant fermeture.
+À H1 : tests JVM exécutés dans la CI ; tests Android d'intégration ajoutés pour Keystore, mot de passe de sauvegarde, corruption et purge ; leur résultat sur émulateur et téléphone doit être vérifié. Les tests H2–H7 restent prospectifs.
+
+## Tests supplémentaires H1
+- T13 : archive protégée par mot de passe, aucune donnée fictive en clair.
+- T14 : mauvais mot de passe/fichier altéré => import rejeté et aucune modification des données locales.
+- T15 : suppression intégrale => fichier chiffré et alias Keystore effacés, journal neuf utilisable.
+- T16 : signature release stable et migration de version sans désinstallation => test Android réel restant.
