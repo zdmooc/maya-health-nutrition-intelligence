@@ -2,7 +2,7 @@
 
 Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans biologiques et de veille scientifique, basée sur des **preuves traçables**.
 
-> **État au 2026-10-09 : H1_CI_BUILD_PROVEN / H1_DEVICE_RUNTIME_PENDING.** Un APK debug a été compilé avec tests unitaires CI SUCCESS. L'installation sur téléphone réel, l'export/import chiffré et les fonctions H2–H7 ne sont pas validés.
+> **État au 2026-10-10 : H1_BACKUP_SOURCE_IMPLEMENTED / ANDROID_BUILD_PROVEN / EMULATOR_AND_PHONE_PENDING.** Ajout de l'export/import chiffré et de la purge ; preuves de fonctionnement sur appareil à valider avant clôture.
 
 ## Objectifs fonctionnels
 1. Journal alimentaire local et cumul quotidien, unités contrôlées.
@@ -30,8 +30,8 @@ Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans b
 ## Ordre de construction
 | Gate | Fonctionnalité | Statut |
 |---|---|---|
-| H0 | Cadrage, ADR, contrats de données, squelette Android | IN PROGRESS |
-| H1 | Journal manuel chiffré Android, tests et APK debug | CI_BUILD_PROVEN / DEVICE_PENDING / EXPORT_PENDING |
+| H0 | Cadrage, ADR, contrats de données, squelette Android | DOCUMENTED |
+| H1 | Journal Android, sauvegarde portable chiffrée, restauration et purge | BUILD_PROVEN / EMULATOR_PENDING / PHONE_PENDING |
 | H2 | Recherche/scan code-barres, traçabilité produit | OPEN |
 | H3 | Photos repas et vérification des portions, benchmark d'erreur | OPEN |
 | H4 | Micronutriments et composition, références et couverture | OPEN |
@@ -40,6 +40,11 @@ Application Android **personnelle** de suivi nutritionnel, d'analyse de bilans b
 | H7 | Synthèse personnelle, tests sécurité/fiabilité, APK de démonstration | OPEN |
 
 Consulter [ROADMAP](docs/ROADMAP.md), [ADR-0001](docs/adr/ADR-0001-android-local-first.md), [modèle de données](docs/architecture/DATA_CONTRACTS.md), [sources](docs/scientific-methodology/SOURCES.md) et [sécurité](docs/privacy-security/THREAT_MODEL.md).
+
+## Extension H1 — 10 octobre 2026
+- Export local chiffré à phrase secrète ; import avec confirmation d'écrasement ; purge du journal et de la clé Keystore.
+- Tests Android d'intégration (Keystore, archive altérée, mauvais mot de passe, purge) ajoutés ; [workflow émulateur](.github/workflows/android-h1-runtime.yml).
+- Aucun APK de production ni test sur ton téléphone n'est revendiqué. Pour éviter une perte de données à la mise à jour, consulte [la stratégie de signature](docs/SECURE_SIGNING_AND_UPDATE.md).
 
 ## Démarrage
 Le module Android `apps/android/` offre un journal manuel avec stockage local AES-256-GCM/AndroidKeyStore, journal des aliments et suppression individuelle. Le build GitHub Actions du 09/10/2026 est **SUCCESS**, artefact APK debug généré. Aucun test d'exécution sur téléphone réel ni test instrumentation AndroidKeystore n'est encore attesté.
