@@ -1,6 +1,8 @@
 package com.maya.health
 
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import java.io.IOException
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -58,6 +63,61 @@ private fun FoodDiaryScreen(repository: EncryptedDiaryRepository) {
     var name by rememberSaveable { mutableStateOf("") }
     var kcalText by rememberSaveable { mutableStateOf("") }
     var gramsText by rememberSaveable { mutableStateOf("") }
+    var backupPassword by remember { mutableStateOf("") }
+    var backupStatus by remember { mutableStateOf<String?>(null) }
+    var approveOverwrite by remember { mutableStateOf(false) }
+    var approveErase by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // SAF creates a document only after the person chooses the destination.
+    // Backup is encrypted before a single byte is written to that destination.
+    val exportLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/octet-stream")
+    ) { uri ->
+        if (uri != null) {
+            val secret = backupPassword.toCharArray()
+            try {
+                val archive = PortableDiaryBackup.encrypt(DiaryJsonCodec.encode(entries), secret)
+                val output = context.contentResolver.openOutputStream(uri, "w")
+                    ?: throw IOException("Export destination unavailable")
+                output.use { it.write(archive) }
+                backupStatus = "Export chiffré créé. Conserve ton mot de passe : il ne peut pas être récupéré."
+            } catch (_: Exception) {
+                backupStatus = "Export impossible. Supprime le fichier partiel éventuel dans le stockage choisi."
+            } finally {
+                secret.fill('\u0000')
+                backupPassword = ""
+            }
+        }
+    }
+
+    val importLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            val secret = backupPassword.toCharArray()
+            try {
+                if (!approveOverwrite || storageError != null) {
+                    throw IOException("Replacement is not authorized")
+                }
+                val input = context.contentResolver.openInputStream(uri)
+                    ?: throw IOException("Import source unavailable")
+                val encrypted = input.use { PortableDiaryBackup.readLimited(it) }
+                val restored = DiaryJsonCodec.decode(PortableDiaryBackup.decrypt(encrypted, secret))
+                // Validate and decrypt everything before changing the current diary.
+                repository.save(restored)
+                entries = restored
+                backupStatus = "Journal importé et enregistré localement."
+                storageError = null
+                approveOverwrite = false
+            } catch (_: Exception) {
+                backupStatus = "Import refusé : mot de passe, format ou stockage invalide. Journal inchangé."
+            } finally {
+                secret.fill('\u0000')
+                backupPassword = ""
+            }
+        }
+    }
 
     val kcal = FoodMath.parseCalories(kcalText)
     val grams = if (gramsText.isBlank()) null else FoodMath.parsePositiveDecimal(gramsText, 10000.0)
@@ -163,6 +223,76 @@ private fun FoodDiaryScreen(repository: EncryptedDiaryRepository) {
                 }
             }
         }
+        HorizontalDivider()
+        Text("Sauvegarde et confidentialité", style = MaterialTheme.typography.titleMedium)
+        Text(
+            "Les exports sont chiffrés avec une phrase secrète (12 caractères minimum). " +
+                "Sans cette phrase, la restauration est impossible. Ne la communique jamais.",
+            style = MaterialTheme.typography.bodySmall
+        )
+        OutlinedTextField(
+            value = backupPassword,
+            onValueChange = { backupPassword = it.take(256) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Phrase secrète pour sauvegarder/restaurer") },
+            visualTransformation = PasswordVisualTransformation(),
+            singleLine = true
+        )
+        Button(
+            enabled = backupPassword.length >= 12 && storageError == null,
+            onClick = { exportLauncher.launch("maya-health-backup.mhbackup") },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Exporter un fichier chiffré") }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            androidx.compose.material3.Checkbox(
+                checked = approveOverwrite,
+                onCheckedChange = { approveOverwrite = it }
+            )
+            Text(
+                "Je confirme : importer remplacera tout le journal existant.",
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Button(
+            enabled = backupPassword.length >= 12 && approveOverwrite && storageError == null,
+            onClick = { importLauncher.launch(arrayOf("application/octet-stream", "*/*")) },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Importer une sauvegarde chiffrée") }
+        if (backupStatus != null) {
+            Text(backupStatus!!, style = MaterialTheme.typography.bodySmall)
+        }
+        HorizontalDivider()
+        Text("Suppression complète", style = MaterialTheme.typography.titleMedium)
+        Text(
+            "Efface définitivement le journal local et sa clé de chiffrement. " +
+                "Les exports créés ailleurs ne sont pas supprimés.",
+            style = MaterialTheme.typography.bodySmall
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            androidx.compose.material3.Checkbox(
+                checked = approveErase,
+                onCheckedChange = { approveErase = it }
+            )
+            Text("Je confirme la suppression irréversible du journal local.")
+        }
+        Button(
+            enabled = approveErase,
+            onClick = {
+                runCatching { repository.deleteAll() }
+                    .onSuccess {
+                        entries = emptyList()
+                        storageError = null
+                        backupPassword = ""
+                        backupStatus = "Journal local supprimé."
+                        approveErase = false
+                        approveOverwrite = false
+                    }
+                    .onFailure {
+                        backupStatus = "Suppression incomplète : vérifier le stockage avant réutilisation."
+                    }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Effacer définitivement le journal") }
         Text(
             "Valeurs saisies par l'utilisateur, non vérifiées. Les nutriments non renseignés " +
                 "(fer, calcium, magnésium, vitamines…) restent INCONNUS : jamais zéro.",
