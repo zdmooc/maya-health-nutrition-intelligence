@@ -80,6 +80,28 @@ class EncryptedDiaryRepositoryTest {
         }
     }
 
+
+    @Test fun offBarcodeParserDoesNotInventMissingNutritionValues() {
+        val sample = """{"status":"success","product":{"code":"3017620422003","product_name":"Test fictif","nutriments":{"energy-kcal_100g":525.0,"proteins_100g":6.3}}}"""
+        val found = OpenFoodFactsClient.parseResponse(sample, "3017620422003")
+        assertEquals(525.0, found!!.energyKcal100g!!, 0.001)
+        assertEquals(6.3, found.proteinG100g!!, 0.001)
+        assertTrue(found.fatG100g == null)
+        assertTrue(found.carbsG100g == null)
+        assertTrue(OpenFoodFactsClient.isValidBarcode("3017620422003"))
+        assertFalse(OpenFoodFactsClient.isValidBarcode("barcode-private"))
+    }
+
+    @Test fun offMissingOrWrongProductIsRejected() {
+        assertTrue(OpenFoodFactsClient.parseResponse("""{"status":"failure"}""", "3017620422003") == null)
+        assertReject {
+            OpenFoodFactsClient.parseResponse(
+                """{"status":"success","product":{"code":"0000000000000","product_name":"Other"}}""",
+                "3017620422003"
+            )
+        }
+    }
+
     private fun assertReject(block: () -> Unit) {
         var thrown = false
         try { block() } catch (_: Exception) { thrown = true }

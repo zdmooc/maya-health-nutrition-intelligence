@@ -158,6 +158,11 @@ private fun FoodDiaryScreen(repository: EncryptedDiaryRepository) {
             Text(storageError!!, color = MaterialTheme.colorScheme.error)
         }
         Text("Ajouter un aliment", style = MaterialTheme.typography.titleMedium)
+        BarcodeFoodPanel(onChoose = { label, kcal, grams ->
+            name = label.take(120)
+            kcalText = String.format(Locale.US, "%.2f", kcal)
+            gramsText = String.format(Locale.US, "%.2f", grams)
+        })
         OutlinedTextField(
             value = name,
             onValueChange = { name = it.take(120) },
